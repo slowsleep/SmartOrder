@@ -26,32 +26,75 @@ import { Form, Head } from '@inertiajs/vue3';
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
+                    <Label for="name">Login</Label>
                     <Input
-                        id="name"
+                        id="login"
                         type="text"
                         required
                         autofocus
                         :tabindex="1"
-                        autocomplete="name"
-                        name="name"
-                        placeholder="Full name"
+                        autocomplete="login"
+                        name="login"
+                        placeholder="Login"
                     />
-                    <InputError :message="errors.name" />
+                    <InputError :message="errors.login" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
+                    <Label for="name">First name</Label>
                     <Input
-                        id="email"
-                        type="email"
+                        id="first_name"
+                        type="text"
                         required
-                        :tabindex="2"
-                        autocomplete="email"
-                        name="email"
-                        placeholder="email@example.com"
+                        autofocus
+                        :tabindex="1"
+                        autocomplete="First name"
+                        name="first_name"
+                        placeholder="First name"
                     />
-                    <InputError :message="errors.email" />
+                    <InputError :message="errors.first_name" />
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="name">Last name</Label>
+                    <Input
+                        id="last_name"
+                        type="text"
+                        required
+                        autofocus
+                        :tabindex="1"
+                        autocomplete="Last name"
+                        name="last_name"
+                        placeholder="Last name"
+                    />
+                    <InputError :message="errors.last_name" />
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="name">Patronymic</Label>
+                    <Input
+                        id="patronymic"
+                        type="text"
+                        required
+                        autofocus
+                        :tabindex="1"
+                        autocomplete="Patronymic"
+                        name="patronymic"
+                        placeholder="Patronymic"
+                    />
+                    <InputError :message="errors.patronymic" />
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="name">Birthdate</Label>
+                    <Input
+                        id="birth_date"
+                        type="date"
+                        required
+                        autofocus
+                        name="birth_date"
+                    />
+                    <InputError :message="errors.birth_date" />
                 </div>
 
                 <div class="grid gap-2">

@@ -18,8 +18,6 @@ class Order extends Model
     protected $fillable = [
         'table_number',
         'status',
-        'delivery_type',
         'notes',
-        'waiter_id',
     ];
 }

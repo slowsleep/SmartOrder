@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\OrderStatus;
 
 return new class extends Migration
 {
@@ -13,22 +14,12 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->integer('table_number')->nullable();
-            $table->enum('delivery_type', ['full', 'partial'])->default('partial');
-            $table->enum('status', [
-                'pending',      // ожидает подтверждения
-                'confirmed',    // подтвержден
-                'preparing',    // готовится (хотя бы один item)
-                'partially_ready', // часть блюд готова
-                'ready',        // все готово
-                'completed',    // завершен (все подано)
-                'cancelled'     // отменен
-            ])->default('pending');
+            $table->integer('table_number');
+            $table->enum('status', array_column(OrderStatus::cases(), 'value'))->default(OrderStatus::PENDING->value);
             $table->text('notes')->nullable();
-            $table->foreignId('waiter_id')->nullable()->constrained('users'); // основной официант или null, если заказ partial
             $table->timestamps();
 
-            $table->index(['status', 'delivery_type']);
+            $table->index('status');
         });
     }
 

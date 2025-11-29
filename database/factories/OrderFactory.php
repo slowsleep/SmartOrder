@@ -20,7 +20,7 @@ class OrderFactory extends Factory
     {
         return [
             'table_number' => $this->faker->numberBetween(1, 20),
-            'delivery_type' => $this->faker->randomElement(['full', 'partial']),
+            // 'delivery_type' => $this->faker->randomElement(['full', 'partial']),
             'status' => $this->faker->randomElement([
                 'pending',
                 'confirmed',
@@ -31,10 +31,10 @@ class OrderFactory extends Factory
                 'cancelled'
             ]),
             'notes' => $this->faker->optional()->sentence(),
-            'waiter_id' => User::where('role', Role::where('name', 'waiter')->first()->id)
-                ->inRandomOrder()
-                ->first()
-                ->id,
+            // 'waiter_id' => User::where('role', Role::where('name', 'waiter')->first()->id)
+            //     ->inRandomOrder()
+            //     ->first()
+            //     ->id,
         ];
     }
 }

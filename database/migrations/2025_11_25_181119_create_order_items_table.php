@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\OrderItemStatus;
 
 return new class extends Migration
 {
@@ -17,14 +18,9 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained();
             $table->integer('quantity');
             $table->decimal('unit_price', 8, 2); // цена на момент заказа
-            $table->enum('status', [
-                'pending',   // ожидает приготовления
-                'preparing', // готовится
-                'ready',     // готов к подаче
-                'served'     // подано клиенту
-            ])->default('pending');
-            $table->foreignId('cook_id')->nullable()->constrained('users');
-            $table->foreignId('served_by')->nullable()->constrained('users'); // кто конкретно подавал
+            $table->enum('status', array_column(OrderItemStatus::cases(), 'value'))->default(OrderItemStatus::PENDING->value);
+            $table->foreignId('cook_id')->constrained('users');
+            $table->foreignId('served_by')->constrained('users'); // кто конкретно подавал
             $table->timestamp('served_at')->nullable(); // когда подано
             $table->text('notes')->nullable();
             $table->timestamps();

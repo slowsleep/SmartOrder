@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Product;
 
 class ProductSeeder extends Seeder
 {
@@ -12,11 +13,8 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-    \App\Models\Product::factory()
-        ->count(20)
-        ->create([
-            'name' => function() {
-                $products = [
+        Product::withoutEvents(function () {
+            collect([
                     'Пицца Маргарита', 'Пицца Пепперони', 'Пицца Гавайская',
                     'Бургер Классический', 'Бургер Чизбургер', 'Бургер Вегетарианский',
                     'Салат Цезарь', 'Салат Греческий', 'Салат Оливье',
@@ -25,9 +23,9 @@ class ProductSeeder extends Seeder
                     'Паста Карбонара', 'Паста Болоньезе', 'Паста Арабьята',
                     'Кофе Латте', 'Кофе Капучино', 'Кофе Американо',
                     'Чай Зеленый', 'Чай Черный', 'Чай Фруктовый'
-                ];
-                return fake()->randomElement($products);
-            }
-        ]);
+            ])->each(function ($product) {
+                Product::factory()->create(['name' => $product]);
+            });
+        });
     }
 }

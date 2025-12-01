@@ -21,4 +21,9 @@ class OrderItem extends Model
         'served_at',
         'notes',
     ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }

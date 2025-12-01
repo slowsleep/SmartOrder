@@ -20,4 +20,9 @@ class Order extends Model
         'status',
         'notes',
     ];
+
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

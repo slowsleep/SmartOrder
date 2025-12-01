@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained();
-            $table->integer('quantity');
             $table->decimal('unit_price', 8, 2); // цена на момент заказа
             $table->enum('status', array_column(OrderItemStatus::cases(), 'value'))->default(OrderItemStatus::PENDING->value);
             $table->foreignId('cook_id')->nullable()->constrained('users');

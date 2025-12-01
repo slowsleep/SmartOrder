@@ -21,7 +21,6 @@ class OrderItemFactory extends Factory
     {
         return [
             'product_id' => Product::inRandomOrder()->first()->id,
-            'quantity' => $this->faker->numberBetween(1, 5),
             'unit_price' => $this->faker->randomFloat(2, 5, 500),
             'status' => $this->faker->randomElement([
                 'pending',

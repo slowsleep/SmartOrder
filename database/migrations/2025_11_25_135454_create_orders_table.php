@@ -14,8 +14,11 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->integer('table_number');
+            $table->foreignId('table_id')->constrained();
             $table->enum('status', array_column(OrderStatus::cases(), 'value'))->default(OrderStatus::PENDING->value);
+            $table->string('guest_token')->unique(); // секретный токен гостя
+            $table->timestamp('expires_at'); // когда просмотр истекает
+            $table->timestamp('paid_at')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
 

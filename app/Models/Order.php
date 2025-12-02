@@ -16,8 +16,12 @@ class Order extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'table_id',
         'table_number',
+        'guest_token',
+        'expires_at',
         'status',
+        'paid_at',
         'notes',
     ];
 

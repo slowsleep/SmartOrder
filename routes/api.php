@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\StaffController;
 use App\Http\Controllers\Api\ClientMenuController;
 use App\Http\Controllers\Api\ClientCartController;
+use App\Http\Controllers\Api\ClientOrderController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -29,3 +30,10 @@ Route::prefix('cart')->group(function () {
     Route::post('/remove', [ClientCartController::class, 'remove']);
     Route::post('/clear', [ClientCartController::class, 'clear']);
 });
+
+Route::post('/order', [ClientOrderController::class, 'store']);
+Route::get('/order/{orderId}', [ClientOrderController::class, 'status'])
+    ->middleware('order.token'); // middleware для проверки токена
+Route::post('/order/{orderId}/pay', [ClientOrderController::class, 'pay'])
+    ->middleware('order.token');
+

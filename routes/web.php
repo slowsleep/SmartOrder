@@ -15,3 +15,7 @@ Route::get('dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__.'/settings.php';
+
+Route::get('menu', function () {
+    return Inertia::render('Menu');
+})->name('menu');

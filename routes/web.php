@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\TableController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -19,3 +20,5 @@ require __DIR__.'/settings.php';
 Route::get('menu', function () {
     return Inertia::render('Menu');
 })->name('menu');
+
+Route::get('/table/{qr_token}', [TableController::class, 'init'])->name('table.init');

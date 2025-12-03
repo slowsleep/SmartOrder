@@ -2,6 +2,8 @@
 
 namespace App\Observers;
 
+use App\Models\OrderItem;
+
 class OrderItemObserver extends BaseObserver
 {
     protected function getEntityName(): string
@@ -9,6 +11,11 @@ class OrderItemObserver extends BaseObserver
         return 'OrderItem';
     }
 
+    /**
+     * Summary of getIdentifier
+     * @param OrderItem $entity
+     * @return string
+     */
     protected function getIdentifier($entity): string
     {
         return $entity->product->name;

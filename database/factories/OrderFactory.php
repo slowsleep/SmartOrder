@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;
-use App\Models\Role;
+use App\Models\Table;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order>
@@ -18,23 +18,29 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
+        $order_datetime = $this->faker->dateTimeBetween('-2 days', 'now');
+
+        $expires_at = clone $order_datetime;
+        $expires_at->modify('+2 hour');
+
+        $paid_at = clone $order_datetime;
+        $paid_at->modify('+2 minutes');
+
+        $status = $this->faker->randomElement(
+                array_column(OrderStatus::cases(), 'value')
+        );
+
+        $is_pending = $status === OrderStatus::PENDING->value;
+
         return [
-            'table_number' => $this->faker->numberBetween(1, 20),
-            // 'delivery_type' => $this->faker->randomElement(['full', 'partial']),
-            'status' => $this->faker->randomElement([
-                'pending',
-                'confirmed',
-                'preparing',
-                'partially_ready',
-                'ready',
-                'completed',
-                'cancelled'
-            ]),
+            'table_id' => Table::inRandomOrder()->first()->id,
+            'status' => $status,
             'notes' => $this->faker->optional()->sentence(),
-            // 'waiter_id' => User::where('role', Role::where('name', 'waiter')->first()->id)
-            //     ->inRandomOrder()
-            //     ->first()
-            //     ->id,
+            'guest_token' => $this->faker->uuid(),
+            'expires_at' => $expires_at->format('Y-m-d H:i:s'),
+            'paid_at' =>  $is_pending ? null : $paid_at->format('Y-m-d H:i:s'),
+            'created_at' => $order_datetime,
+            'updated_at' => $order_datetime
         ];
     }
 }

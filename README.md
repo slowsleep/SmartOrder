@@ -2,18 +2,11 @@
 
 ## First steps:
 
-### Adding roles
+### Seeding the database
 
-Seeding roles table:
+Сreating test data:
 
-`sail artisan db:seed --class=RoleSeeder`
-
-### Adding test users
-
-Seeding users table:
-
-`sail artisan db:seed --class=UserSeeder`
-
+`sail artisan db:seed`
 
 ## Stack:
 - Laravel v12

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\StaffController;
 use App\Http\Controllers\Api\ClientMenuController;
 use App\Http\Controllers\Api\ClientCartController;
 use App\Http\Controllers\Api\ClientOrderController;
+use App\Http\Controllers\Api\CookOrderController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -37,3 +38,8 @@ Route::get('/order/{orderId}', [ClientOrderController::class, 'status'])
 Route::post('/order/{orderId}/pay', [ClientOrderController::class, 'pay'])
     ->middleware('order.token');
 
+Route::middleware(['auth:sanctum', 'role:cook'])->prefix('staff/cook/order')->group(function () {
+    Route::get('/', [CookOrderController::class, 'index']);
+    Route::post('/{id}/get', [CookOrderController::class, 'get']);
+    Route::post('/{id}/ready', [CookOrderController::class, 'ready']);
+});

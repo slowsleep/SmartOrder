@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Order;
+
 
 class OrderSeeder extends Seeder
 {
@@ -12,9 +14,11 @@ class OrderSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Order::factory()
-            ->count(10)
-            ->hasOrderItems(3)
-            ->create();
+        Order::withoutEvents(function(){
+            Order::factory()
+                ->count(10)
+                ->hasItems(3)
+                ->create();
+        });
     }
 }

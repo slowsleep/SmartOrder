@@ -17,10 +17,9 @@ class Order extends Model
      */
     protected $fillable = [
         'table_id',
-        'table_number',
+        'status',
         'guest_token',
         'expires_at',
-        'status',
         'paid_at',
         'notes',
     ];

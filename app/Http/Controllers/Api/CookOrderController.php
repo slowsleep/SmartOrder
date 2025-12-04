@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Auth;
 class CookOrderController extends Controller
 {
     use ApiResponse;
-    
+
     /**
      * Очередь блюд на приготовление
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $orderItems = OrderItem::where('status', OrderItemStatus::PENDING)->get();
+        $orderItems = OrderItem::where('status', OrderItemStatus::PENDING)->orderBy('created_at', 'asc')->get();
 
         return $this->success($orderItems);
     }
@@ -31,7 +31,7 @@ class CookOrderController extends Controller
      */
     public function get($id)
     {
-        $orderItem = OrderItem::findOrFail($id);
+        $orderItem = OrderItem::where('status', OrderItemStatus::PENDING)->findOrFail($id);
         $orderItem->update([
             'status' => OrderItemStatus::PREPARING,
             'cook_id' => Auth::id(),
@@ -47,7 +47,9 @@ class CookOrderController extends Controller
      */
     public function ready($id)
     {
-        $orderItem = OrderItem::findOrFail($id);
+        $orderItem = OrderItem::where('status', OrderItemStatus::PREPARING)
+            ->where('cook_id', Auth::id())
+            ->findOrFail($id);
         $orderItem->update([
             'status' => OrderItemStatus::READY,
         ]);

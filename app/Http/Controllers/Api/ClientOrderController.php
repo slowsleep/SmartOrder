@@ -42,12 +42,14 @@ class ClientOrderController extends Controller
 
         foreach ($cart as $item) {
             Collection::times($item['quantity'], function () use ($order, $item) {
-                OrderItem::create([
-                    'order_id'   => $order->id,
-                    'product_id' => $item['product_id'],
-                    'unit_price' => $item['price'],
-                    'status'     => OrderItemStatus::PENDING->value,
-                ]);
+                OrderItem::withoutEvents(function () use ($order, $item) {
+                    OrderItem::create([
+                        'order_id'   => $order->id,
+                        'product_id' => $item['product_id'],
+                        'unit_price' => $item['price'],
+                        'status'     => OrderItemStatus::PENDING->value,
+                    ]);
+                });
             });
         }
 

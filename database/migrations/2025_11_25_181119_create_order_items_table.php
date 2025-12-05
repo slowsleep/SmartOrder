@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('unit_price', 8, 2); // цена на момент заказа
             $table->enum('status', array_column(OrderItemStatus::cases(), 'value'))->default(OrderItemStatus::PENDING->value);
             $table->foreignId('cook_id')->nullable()->constrained('users');
-            $table->foreignId('served_by')->nullable()->constrained('users'); // кто конкретно подавал
+            $table->foreignId('waiter_id')->nullable()->constrained('users'); // кто конкретно подавал
             $table->timestamp('served_at')->nullable(); // когда подано
             $table->text('notes')->nullable();
             $table->timestamps();

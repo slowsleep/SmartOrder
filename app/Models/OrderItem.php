@@ -20,7 +20,7 @@ class OrderItem extends Model
         'unit_price',
         'status',
         'cook_id',
-        'served_by',
+        'waiter_id',
         'served_at',
         'notes',
     ];

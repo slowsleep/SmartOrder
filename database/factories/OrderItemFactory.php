@@ -39,7 +39,7 @@ class OrderItemFactory extends Factory
                     ->first()
                     ->id
                 : null,
-            'served_by' => ($is_in_delivery || $is_served)
+            'waiter_id' => ($is_in_delivery || $is_served)
                 ? User::where('role_id', Role::class::where('name', 'waiter')->first()->id)
                     ->inRandomOrder()
                     ->first()

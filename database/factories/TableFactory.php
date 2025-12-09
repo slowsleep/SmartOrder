@@ -18,7 +18,7 @@ class TableFactory extends Factory
     public function definition(): array
     {
         return [
-            'number' => $this->faker->randomNumber(2),
+            'number' => $this->faker->unique()->randomNumber(2),
             'qr_token' => $this->faker->uuid,
             'status' => TableStatus::AVAILABLE->value
         ];

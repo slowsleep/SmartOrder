@@ -30,6 +30,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'order.token' => VerifyOrderToken::class,
         ]);
+
+        // Подключение работы sanctum с куками, а не только с токенами
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -45,7 +45,7 @@ class OrderItemFactory extends Factory
                     ->first()
                     ->id
                 : null,
-            'served_at' => $is_served ? $this->faker->dateTimeBetween('-2 days', 'now') : null,
+            'served_at' => $is_served ? $this->faker->dateTimeBetween('-1 hour', 'now') : null,
             'notes' => $this->faker->optional()->sentence(),
         ];
     }

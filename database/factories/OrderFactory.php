@@ -18,7 +18,7 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
-        $order_datetime = $this->faker->dateTimeBetween('-2 days', 'now');
+        $order_datetime = $this->faker->dateTimeBetween('-1 hour', 'now');
 
         $expires_at = clone $order_datetime;
         $expires_at->modify('+2 hour');

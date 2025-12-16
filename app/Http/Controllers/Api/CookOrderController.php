@@ -19,7 +19,7 @@ class CookOrderController extends Controller
      */
     public function index()
     {
-        $orderItems = OrderItem::where('status', OrderItemStatus::PENDING)->orderBy('created_at', 'asc')->get();
+        $orderItems = OrderItem::where('status', OrderItemStatus::PENDING)->orderBy('created_at', 'asc')->with('product')->get();
 
         return $this->success($orderItems);
     }

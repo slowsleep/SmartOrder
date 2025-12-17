@@ -14,7 +14,7 @@ class WaiterOrderController extends Controller
     use ApiResponse;
 
     public function index(){
-        $orderItems = OrderItem::where('status', OrderItemStatus::READY)->get();
+        $orderItems = OrderItem::where('status', OrderItemStatus::READY)->with('product')->get();
 
         return $this->success($orderItems);
     }

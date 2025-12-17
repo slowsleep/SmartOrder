@@ -19,6 +19,16 @@ class WaiterOrderController extends Controller
         return $this->success($orderItems);
     }
 
+    public function owns(){
+        $orderItems = OrderItem::where('status', OrderItemStatus::IN_DELIVERY)
+            ->where('waiter_id', Auth::id())
+            ->orderBy('created_at', 'asc')
+            ->with('product')
+            ->get();
+
+        return $this->success($orderItems);
+    }
+
     public function get($id){
         $orderItem = OrderItem::where('status', OrderItemStatus::READY)->findOrFail($id);
         $orderItem->update([

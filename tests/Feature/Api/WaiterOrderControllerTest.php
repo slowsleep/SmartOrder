@@ -13,6 +13,9 @@ use App\Models\Table;
 use App\Enums\OrderItemStatus;
 use Laravel\Sanctum\Sanctum;
 
+/**
+ * Tests for Api/WaiterOrderController
+ */
 class WaiterOrderControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -151,6 +154,52 @@ class WaiterOrderControllerTest extends TestCase
         $this->assertCount(1, $data); // только readyOrderItem
         $this->assertEquals(OrderItemStatus::READY->value, $data[0]['status']);
         $this->assertNull($data[0]['waiter_id']); // еще не взяты официантом
+    }
+
+    public function test_waiter_can_view_own_order_items(): void
+    {
+        Sanctum::actingAs($this->waiter);
+
+        $response = $this->getJson('/api/staff/waiter/order/owns');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'error',
+                'message',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'order_id',
+                        'product_id',
+                        'unit_price',
+                        'status',
+                        'cook_id',
+                        'waiter_id',
+                        'served_at',
+                        'notes',
+                        'created_at',
+                        'updated_at',
+                        'product' => [
+                            'id',
+                            'name',
+                            'description',
+                            'is_active',
+                            'price',
+                            'quantity',
+                            'image',
+                            'created_at',
+                            'updated_at',
+                        ]
+                    ]
+                ]
+            ]);
+
+        // Проверяем что вернулся только IN_DELIVERY статус для данного официанта
+        $data = $response->json('data');
+        $this->assertCount(1, $data);
+        $this->assertEquals(OrderItemStatus::IN_DELIVERY->value, $data[0]['status']);
+        $this->assertEquals($this->waiter->id, $data[0]['waiter_id']);
+        $this->assertEquals($this->inDeliveryOrderItem->id, $data[0]['id']);
     }
 
     public function test_waiter_can_take_ready_order_item_for_delivery(): void

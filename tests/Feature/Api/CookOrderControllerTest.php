@@ -14,6 +14,9 @@ use App\Enums\OrderItemStatus;
 use Laravel\Sanctum\Sanctum;
 use App\Models\Table;
 
+/**
+ * Test for Api/CoorOrderController
+ */
 class CookOrderControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -138,6 +141,52 @@ class CookOrderControllerTest extends TestCase
         $data = $response->json('data');
         $this->assertCount(1, $data); // только pendingOrderItem
         $this->assertEquals(OrderItemStatus::PENDING->value, $data[0]['status']);
+    }
+
+    public function test_cook_can_view_own_order_items(): void
+    {
+        Sanctum::actingAs($this->cook);
+
+        $response = $this->getJson('/api/staff/cook/order/owns');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'error',
+                'message',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'order_id',
+                        'product_id',
+                        'unit_price',
+                        'status',
+                        'cook_id',
+                        'waiter_id',
+                        'served_at',
+                        'notes',
+                        'created_at',
+                        'updated_at',
+                        'product' => [
+                            'id',
+                            'name',
+                            'description',
+                            'is_active',
+                            'price',
+                            'quantity',
+                            'image',
+                            'created_at',
+                            'updated_at',
+                        ]
+                    ]
+                ]
+            ]);
+
+        // Проверяем что вернулся только PREPARING статус для данного повара
+        $data = $response->json('data');
+        $this->assertCount(1, $data);
+        $this->assertEquals(OrderItemStatus::PREPARING->value, $data[0]['status']);
+        $this->assertEquals($this->cook->id, $data[0]['cook_id']);
+        $this->assertEquals($this->preparingOrderItem->id, $data[0]['id']);
     }
 
     public function test_cook_can_take_pending_order_item_for_preparation(): void
@@ -283,7 +332,7 @@ class CookOrderControllerTest extends TestCase
     public function test_queue_shows_only_pending_items_sorted_by_created_at(): void
     {
         $order = Order::factory()->create();
-        
+
         // Создаем дополнительные PENDING items с разным временем создания
         $olderItem = OrderItem::withoutEvents(function () use ($order) {
             return OrderItem::factory()->create([

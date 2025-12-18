@@ -5,14 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Http\Requests\ClientCart\ClientCartRequest;
+use App\Traits\ApiResponse;
 
 class ClientCartController extends Controller
 {
+    use ApiResponse;
+
     public function index()
     {
-        return response()->json([
-            'items' => session('cart', []),
-        ]);
+        return $this->success(['items' => array_values(session('cart', []))]);
     }
 
     public function add(ClientCartRequest $request)
@@ -35,7 +36,7 @@ class ClientCartController extends Controller
 
         session(['cart' => $cart]);
 
-        return response()->json(['cart' => $cart]);
+        return $this->success(['cart' => $cart]);
     }
 
     public function decrease(ClientCartRequest $request)
@@ -56,7 +57,7 @@ class ClientCartController extends Controller
 
         session(['cart' => $cart]);
 
-        return response()->json(['cart' => $cart]);
+        return $this->success(['cart' => $cart]);
     }
 
     public function remove(ClientCartRequest $request)
@@ -67,13 +68,13 @@ class ClientCartController extends Controller
 
         session(['cart' => $cart]);
 
-        return response()->json(['cart' => $cart]);
+        return $this->success(['cart' => $cart]);
     }
 
     public function clear()
     {
         session()->forget('cart');
 
-        return response()->json(['message' => 'Cart cleared']);
+        return $this->success([], 'Cart cleared');
     }
 }

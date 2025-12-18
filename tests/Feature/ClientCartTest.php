@@ -7,6 +7,9 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Product;
 
+/**
+ * Tests for Api/ClientCartController
+ */
 class ClientCartTest extends TestCase
 {
     use RefreshDatabase;
@@ -17,12 +20,16 @@ class ClientCartTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertJsonStructure([
-            'items' => []
+            'error',
+            'message',
+            'data' => [
+                'items' => []
+            ]
         ]);
 
         $data = $response->json();
-        $this->assertIsArray($data['items']);
-        $this->assertEmpty($data['items']);
+        $this->assertIsArray($data['data']['items']);
+        $this->assertEmpty($data['data']['items']);
     }
 
     public function test_cart_persists_between_requests()
@@ -141,7 +148,7 @@ class ClientCartTest extends TestCase
         $response = $this->getJson('/api/cart');
 
         $this->assertNotNull(session('cart'));
-        $this->assertEquals(2, count($response['items']));
+        $this->assertEquals(2, count($response['data']['items']));
         $this->assertArrayHasKey($product1->id, session('cart'));
         $this->assertArrayHasKey($product2->id, session('cart'));
     }

@@ -28,7 +28,7 @@ class CookOrderController extends Controller
      * Блюда в работе у повара
      * @return \Illuminate\Http\JsonResponse
      */
-    public function owns()
+    public function own()
     {
         $orderItems = OrderItem::where('status', OrderItemStatus::PREPARING)
             ->where('cook_id', Auth::id())

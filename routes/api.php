@@ -41,14 +41,14 @@ Route::post('/order/{orderId}/pay', [ClientOrderController::class, 'pay'])
 
 Route::middleware(['auth:sanctum', 'role:cook'])->prefix('staff/cook/order')->group(function () {
     Route::get('/', [CookOrderController::class, 'index']);
-    Route::get('/owns', [CookOrderController::class, 'owns']);
+    Route::get('/own', [CookOrderController::class, 'own']);
     Route::post('/{id}/get', [CookOrderController::class, 'get']);
     Route::post('/{id}/ready', [CookOrderController::class, 'ready']);
 });
 
 Route::middleware(['auth:sanctum', 'role:waiter'])->prefix('staff/waiter/order')->group(function () {
     Route::get('/', [WaiterOrderController::class, 'index']);
-    Route::get('/owns', [WaiterOrderController::class, 'owns']);
+    Route::get('/own', [WaiterOrderController::class, 'own']);
     Route::post('/{id}/get', [WaiterOrderController::class, 'get']);
     Route::post('/{id}/served', [WaiterOrderController::class, 'served']);
 });

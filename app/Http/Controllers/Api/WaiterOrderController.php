@@ -29,7 +29,7 @@ class WaiterOrderController extends Controller
         return $this->success($orderItems);
     }
 
-    public function get($id){
+    public function take($id){
         $orderItem = OrderItem::where('status', OrderItemStatus::READY)->findOrFail($id);
         $orderItem->update([
             'status' => OrderItemStatus::IN_DELIVERY,

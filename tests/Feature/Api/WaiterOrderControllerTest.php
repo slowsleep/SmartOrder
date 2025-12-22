@@ -104,7 +104,7 @@ class WaiterOrderControllerTest extends TestCase
         $response = $this->getJson('/api/staff/waiter/order');
         $response->assertStatus(401);
 
-        $response = $this->postJson('/api/staff/waiter/order/1/get');
+        $response = $this->postJson('/api/staff/waiter/order/1/take');
         $response->assertStatus(401);
 
         $response = $this->postJson('/api/staff/waiter/order/1/served');
@@ -118,7 +118,7 @@ class WaiterOrderControllerTest extends TestCase
         $response = $this->getJson('/api/staff/waiter/order');
         $response->assertStatus(403);
 
-        $response = $this->postJson("/api/staff/waiter/order/{$this->readyOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/waiter/order/{$this->readyOrderItem->id}/take");
         $response->assertStatus(403);
 
         $response = $this->postJson("/api/staff/waiter/order/{$this->inDeliveryOrderItem->id}/served");
@@ -206,7 +206,7 @@ class WaiterOrderControllerTest extends TestCase
     {
         Sanctum::actingAs($this->waiter);
 
-        $response = $this->postJson("/api/staff/waiter/order/{$this->readyOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/waiter/order/{$this->readyOrderItem->id}/take");
 
         $response->assertStatus(200)
             ->assertJson([
@@ -226,19 +226,19 @@ class WaiterOrderControllerTest extends TestCase
         Sanctum::actingAs($this->waiter);
 
         // Пытаемся взять уже взятый в доставку item
-        $response = $this->postJson("/api/staff/waiter/order/{$this->inDeliveryOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/waiter/order/{$this->inDeliveryOrderItem->id}/take");
         $response->assertStatus(404);
 
         // Пытаемся взять уже поданный item
-        $response = $this->postJson("/api/staff/waiter/order/{$this->servedOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/waiter/order/{$this->servedOrderItem->id}/take");
         $response->assertStatus(404);
 
         // Пытаемся взять готовящийся item
-        $response = $this->postJson("/api/staff/waiter/order/{$this->preparingOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/waiter/order/{$this->preparingOrderItem->id}/take");
         $response->assertStatus(404);
 
         // Пытаемся взять ожидающий item
-        $response = $this->postJson("/api/staff/waiter/order/{$this->pendingOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/waiter/order/{$this->pendingOrderItem->id}/take");
         $response->assertStatus(404);
     }
 
@@ -246,7 +246,7 @@ class WaiterOrderControllerTest extends TestCase
     {
         Sanctum::actingAs($this->waiter);
 
-        $response = $this->postJson('/api/staff/waiter/order/999999/get');
+        $response = $this->postJson('/api/staff/waiter/order/999999/take');
         $response->assertStatus(404);
     }
 
@@ -313,7 +313,7 @@ class WaiterOrderControllerTest extends TestCase
         Sanctum::actingAs($this->waiter);
 
         // Пытаемся взять уже взятый item
-        $response = $this->postJson("/api/staff/waiter/order/{$takenItem->id}/get");
+        $response = $this->postJson("/api/staff/waiter/order/{$takenItem->id}/take");
         $response->assertStatus(404); // не найдет, т.к. статус уже IN_DELIVERY
     }
 
@@ -361,7 +361,7 @@ class WaiterOrderControllerTest extends TestCase
         $this->assertNull($this->readyOrderItem->served_at);
 
         // Берем в доставку
-        $response = $this->postJson("/api/staff/waiter/order/{$this->readyOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/waiter/order/{$this->readyOrderItem->id}/take");
         $response->assertStatus(200);
 
         $this->readyOrderItem->refresh();

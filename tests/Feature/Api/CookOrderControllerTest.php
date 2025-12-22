@@ -93,7 +93,7 @@ class CookOrderControllerTest extends TestCase
         $response = $this->getJson('/api/staff/cook/order');
         $response->assertStatus(401);
 
-        $response = $this->postJson('/api/staff/cook/order/1/get');
+        $response = $this->postJson('/api/staff/cook/order/1/take');
         $response->assertStatus(401);
 
         $response = $this->postJson('/api/staff/cook/order/1/ready');
@@ -108,7 +108,7 @@ class CookOrderControllerTest extends TestCase
         $response = $this->getJson('/api/staff/cook/order');
         $response->assertStatus(403);
 
-        $response = $this->postJson("/api/staff/cook/order/{$this->pendingOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/cook/order/{$this->pendingOrderItem->id}/take");
         $response->assertStatus(403);
 
         $response = $this->postJson("/api/staff/cook/order/{$this->preparingOrderItem->id}/ready");
@@ -193,7 +193,7 @@ class CookOrderControllerTest extends TestCase
     {
         Sanctum::actingAs($this->cook);
 
-        $response = $this->postJson("/api/staff/cook/order/{$this->pendingOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/cook/order/{$this->pendingOrderItem->id}/take");
 
         $response->assertStatus(200)
             ->assertJson([
@@ -213,15 +213,15 @@ class CookOrderControllerTest extends TestCase
         Sanctum::actingAs($this->cook);
 
         // Пытаемся взять уже готовый item
-        $response = $this->postJson("/api/staff/cook/order/{$this->readyOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/cook/order/{$this->readyOrderItem->id}/take");
         $response->assertStatus(404);
 
         // Пытаемся взять отмененный item
-        $response = $this->postJson("/api/staff/cook/order/{$this->cancelledOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/cook/order/{$this->cancelledOrderItem->id}/take");
         $response->assertStatus(404);
 
         // Пытаемся взять уже готовящийся item
-        $response = $this->postJson("/api/staff/cook/order/{$this->preparingOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/cook/order/{$this->preparingOrderItem->id}/take");
         $response->assertStatus(404);
     }
 
@@ -229,7 +229,7 @@ class CookOrderControllerTest extends TestCase
     {
         Sanctum::actingAs($this->cook);
 
-        $response = $this->postJson('/api/staff/cook/order/999999/get');
+        $response = $this->postJson('/api/staff/cook/order/999999/take');
         $response->assertStatus(404);
     }
 
@@ -313,7 +313,7 @@ class CookOrderControllerTest extends TestCase
         $this->assertNull($this->pendingOrderItem->cook_id);
 
         // 2. Берем в работу
-        $response = $this->postJson("/api/staff/cook/order/{$this->pendingOrderItem->id}/get");
+        $response = $this->postJson("/api/staff/cook/order/{$this->pendingOrderItem->id}/take");
         $response->assertStatus(200);
 
         $this->pendingOrderItem->refresh();

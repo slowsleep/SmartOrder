@@ -44,7 +44,7 @@ class CookOrderController extends Controller
      * @param mixed $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function get($id)
+    public function take($id)
     {
         $orderItem = OrderItem::where('status', OrderItemStatus::PENDING)->findOrFail($id);
         $orderItem->update([

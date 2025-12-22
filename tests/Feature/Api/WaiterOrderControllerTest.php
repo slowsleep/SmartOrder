@@ -160,7 +160,7 @@ class WaiterOrderControllerTest extends TestCase
     {
         Sanctum::actingAs($this->waiter);
 
-        $response = $this->getJson('/api/staff/waiter/order/owns');
+        $response = $this->getJson('/api/staff/waiter/order/own');
 
         $response->assertStatus(200)
             ->assertJsonStructure([

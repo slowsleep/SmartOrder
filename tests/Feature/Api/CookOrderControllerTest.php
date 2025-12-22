@@ -147,7 +147,7 @@ class CookOrderControllerTest extends TestCase
     {
         Sanctum::actingAs($this->cook);
 
-        $response = $this->getJson('/api/staff/cook/order/owns');
+        $response = $this->getJson('/api/staff/cook/order/own');
 
         $response->assertStatus(200)
             ->assertJsonStructure([

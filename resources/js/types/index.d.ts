@@ -41,3 +41,12 @@ export interface User {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export type ProductType = {
+    id: number;
+    name: string;
+    description: string | null;
+    price: number;
+    quantity: number;
+    image: string | null;
+};

@@ -18,7 +18,7 @@ Route::get('dashboard', function () {
 require __DIR__.'/settings.php';
 
 Route::get('menu', function () {
-    return Inertia::render('Menu');
-})->name('menu');
+    return Inertia::render('Client/Menu/Menu');
+})->name('client.menu');
 
 Route::get('/table/{qr_token}', [TableController::class, 'init'])->name('table.init');

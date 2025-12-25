@@ -22,6 +22,6 @@ class TableController extends Controller
         ]);
 
         // Редирект на страницу меню
-        return redirect()->route('menu');
+        return redirect()->route('client.menu');
     }
 }

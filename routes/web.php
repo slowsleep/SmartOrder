@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\TableController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -30,3 +31,17 @@ Route::get('order/{orderId}', function () {
 })->middleware('order.token')->name('client.order.status');
 
 Route::get('/table/{qr_token}', [TableController::class, 'init'])->name('table.init');
+
+Route::middleware(['auth', 'verified', 'role:cook'])->group(function () {
+    Route::get('kitchen', function () {
+        return Inertia::render('Kitchen/KitchenDashboard');
+    })->name('cook-kitchen');
+
+    Route::get('kitchen/orders', function () {
+        return Inertia::render('Kitchen/Orders');
+    })->name('cook-orders');
+
+    Route::get('kitchen/personal-orders', function () {
+        return Inertia::render('Kitchen/PersonalOrders', ['user_id' => Auth::id()]);
+    })->name('cook-personal-orders');
+});

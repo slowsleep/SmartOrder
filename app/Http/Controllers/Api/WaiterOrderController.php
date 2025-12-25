@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Models\OrderItem;
 use App\Enums\OrderItemStatus;
 use Illuminate\Support\Facades\Auth;
+use App\Events\OrderItemInDelivery;
+use App\Events\OrderItemServed;
+use App\Events\OrderItemStatusUpdated;
 
 class WaiterOrderController extends Controller
 {
@@ -36,6 +39,9 @@ class WaiterOrderController extends Controller
             'waiter_id' => Auth::id(),
         ]);
 
+        broadcast(new OrderItemInDelivery($orderItem));
+        broadcast(new OrderItemStatusUpdated($orderItem->order_id, $orderItem->id, $orderItem->status))->toOthers();
+
         return $this->success([], 'Order item taken');
     }
 
@@ -48,6 +54,9 @@ class WaiterOrderController extends Controller
             'status' => OrderItemStatus::SERVED,
             'served_at' => now(),
         ]);
+
+        broadcast(new OrderItemServed($orderItem));
+        broadcast(new OrderItemStatusUpdated($orderItem->order_id, $orderItem->id, $orderItem->status))->toOthers();
 
         return $this->success([], 'Order item served');
     }

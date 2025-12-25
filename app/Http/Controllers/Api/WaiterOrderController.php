@@ -14,7 +14,7 @@ class WaiterOrderController extends Controller
     use ApiResponse;
 
     public function index(){
-        $orderItems = OrderItem::where('status', OrderItemStatus::READY)->with('product')->get();
+        $orderItems = OrderItem::where('status', OrderItemStatus::READY)->with('product', 'order.table')->get();
 
         return $this->success($orderItems);
     }
@@ -23,7 +23,7 @@ class WaiterOrderController extends Controller
         $orderItems = OrderItem::where('status', OrderItemStatus::IN_DELIVERY)
             ->where('waiter_id', Auth::id())
             ->orderBy('created_at', 'asc')
-            ->with('product')
+            ->with('product', 'order.table')
             ->get();
 
         return $this->success($orderItems);

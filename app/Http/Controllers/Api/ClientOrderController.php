@@ -11,6 +11,7 @@ use App\Enums\OrderItemStatus;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use App\Traits\ApiResponse;
+use App\Events\OrderCreated;
 
 class ClientOrderController extends Controller
 {
@@ -80,6 +81,8 @@ class ClientOrderController extends Controller
             'status' => OrderStatus::CONFIRMED->value,
             'paid_at' => now(),
         ]);
+
+        broadcast(new OrderCreated($order))->toOthers();
 
         return $this->success([], 'Payment successful');
     }

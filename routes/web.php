@@ -45,3 +45,17 @@ Route::middleware(['auth', 'verified', 'role:cook'])->group(function () {
         return Inertia::render('Kitchen/PersonalOrders', ['user_id' => Auth::id()]);
     })->name('cook-personal-orders');
 });
+
+Route::middleware(['auth', 'verified', 'role:waiter'])->group(function () {
+    Route::get('service', function () {
+        return Inertia::render('Service/ServiceDashboard');
+    })->name('waiter-service');
+
+    Route::get('service/orders', function () {
+        return Inertia::render('Service/Orders');
+    })->name('waiter-general-orders');
+
+    Route::get('service/personal-orders', function () {
+        return Inertia::render('Service/PersonalOrders', ['user_id' => Auth::id()]);
+    })->name('waiter-personal-orders');
+});

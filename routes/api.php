@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ClientCartController;
 use App\Http\Controllers\Api\ClientOrderController;
 use App\Http\Controllers\Api\CookOrderController;
 use App\Http\Controllers\Api\WaiterOrderController;
+use App\Http\Controllers\Api\TableController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -52,3 +53,5 @@ Route::middleware(['auth:sanctum', 'role:waiter'])->prefix('staff/waiter/order')
     Route::post('/{id}/take', [WaiterOrderController::class, 'take']);
     Route::post('/{id}/served', [WaiterOrderController::class, 'served']);
 });
+
+Route::get('/tables', [TableController::class, 'index']);

@@ -42,6 +42,13 @@ export interface User {
 
 export type BreadcrumbItemType = BreadcrumbItem;
 
+export type TableType = {
+    id: number;
+    number: number;
+    qr_token: string;
+    status: string;
+}
+
 export type ProductType = {
     id: number;
     name: string;

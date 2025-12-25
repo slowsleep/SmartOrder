@@ -57,3 +57,31 @@ export type ProductType = {
     quantity: number;
     image: string | null;
 };
+
+export type OrderType = {
+    id: number;
+    table_id: number;
+    status: string;
+    guest_token: string;
+    expires_at: string | null;
+    paid_at: string | null;
+    notes: string | null;
+    created_at: string;
+    items: OrderItemType[];
+    table: TableType;
+};
+
+export type OrderItemType = {
+    id: number;
+    order_id: number;
+    product_id: number;
+    unit_price: number;
+    status: string;
+    cook_id: number | null;
+    waiter_id: number | null;
+    served_at: string | null;
+    notes: string | null;
+    created_at: string;
+    product: ProductType;
+    order: OrderType;
+};

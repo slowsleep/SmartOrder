@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Enums\OrderItemStatus;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
+use App\Events\OrderItemPreparing;
+use App\Events\OrderItemReady;
+use App\Events\OrderItemStatusUpdated;
 
 class CookOrderController extends Controller
 {
@@ -52,6 +55,9 @@ class CookOrderController extends Controller
             'cook_id' => Auth::id(),
         ]);
 
+        broadcast(new OrderItemPreparing($orderItem));
+        broadcast(new OrderItemStatusUpdated($orderItem->order_id, $orderItem->id, $orderItem->status))->toOthers();
+
         return $this->success([], 'Order item taken');
     }
 
@@ -68,6 +74,10 @@ class CookOrderController extends Controller
         $orderItem->update([
             'status' => OrderItemStatus::READY,
         ]);
+
+        broadcast(new OrderItemReady($orderItem)
+        );
+        broadcast(new OrderItemStatusUpdated($orderItem->order_id, $orderItem->id, $orderItem->status))->toOthers();
 
         return $this->success([], 'Order item ready');
     }

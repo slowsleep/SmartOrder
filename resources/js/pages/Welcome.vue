@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { dashboard, login, register } from '@/routes';
 import { Head, Link } from '@inertiajs/vue3';
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+import type { TableType } from '@/types';
 
 withDefaults(
     defineProps<{
@@ -10,6 +13,19 @@ withDefaults(
         canRegister: true,
     },
 );
+
+const tables = ref<Array<TableType>>([]);
+
+const getTables = () => {
+    axios.get('/api/tables').then((response) => {
+        tables.value = response.data.data;
+    });
+}
+
+onMounted(() => {
+    getTables();
+});
+
 </script>
 
 <template>
@@ -57,7 +73,26 @@ withDefaults(
                 <div
                     class="flex-1 bg-white p-6 pb-12 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:p-20 dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"
                 >
-                    <p>Welcome to SmartOrder</p>
+                    <p>
+                        Хотите сделать заказ?
+                        Сначала выберите свободный столик из списка ниже,
+                        перейдите по ссылке на ваш столик и оформите заказ из меню.
+                    </p>
+                    <div class="my-2">
+                        <a href="/menu" class="m-2 p-2 bg-purple-200 hover:bg-purple-400 text-black rounded">Меню</a>
+                        <a href="/cart" class="m-2 p-2 bg-sky-200 hover:bg-sky-400 text-black rounded">Корзина</a>
+                    </div>
+                    <div>
+                        <h2>Свободные столы</h2>
+                        <div id="free-tables">
+                            <ul>
+                                <li v-for="table in tables" :key="table.id" class="my-2 p-2 border border-gray-300 rounded">
+                                    <p>Стол №{{ table.number }} - Статус: {{ table.status }}</p>
+                                    <a :href="'/table/' + table.qr_token" class="text-blue-500">Ссылка на стол</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>

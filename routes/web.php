@@ -21,4 +21,8 @@ Route::get('menu', function () {
     return Inertia::render('Client/Menu/Menu');
 })->name('client.menu');
 
+Route::get('cart', function () {
+    return Inertia::render('Client/Cart/Cart');
+})->name('client.cart');
+
 Route::get('/table/{qr_token}', [TableController::class, 'init'])->name('table.init');

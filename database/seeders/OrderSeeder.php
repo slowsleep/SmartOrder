@@ -24,6 +24,9 @@ class OrderSeeder extends Seeder
                     // Обновляем время создания для всех связанных OrderItem
                     $order->items()->each(function (OrderItem $item) use ($order) {
                         $itemCreatedAt = Carbon::parse($order->created_at);
+                        $itemStatus = $order->status === 'cancelled'
+                            ? 'cancelled'
+                            : $item->status;
 
                         $item->update([
                             'created_at' => $itemCreatedAt,
@@ -31,6 +34,7 @@ class OrderSeeder extends Seeder
                             'served_at' => $item->served_at
                                 ? $itemCreatedAt->copy()->addMinutes(rand(5, 20))
                                 : null,
+                            'status' => $itemStatus,
                         ]);
                     });
                 });

@@ -35,6 +35,27 @@ class OrdersController extends BaseStatisticsController
         ]);
     }
 
+    public function byPeriod(Request $request)
+    {
+        $period = $request->query('period', 'all');
+        $startDate = $this->getStartDate($period, $request);
+        $endDate = $this->getEndDate($request);
+
+        $dateFormat = $this->getDateFormat($period);
+
+        $ordersByPeriod = $this->ordersByPeriod($dateFormat, $startDate, $endDate);
+
+        return $this->success([
+            'orders_by_period' => $ordersByPeriod,
+            'period' => $this->getPeriodLabel($period, $startDate, $endDate),
+            'date_range' => [
+                'start' => $startDate->format('Y-m-d H:i:s'),
+                'end' => $endDate->format('Y-m-d H:i:s'),
+            ],
+        ]);
+    }
+
+
     /**
      * Общая статистика
      * @param Carbon $startDate
@@ -55,4 +76,26 @@ class OrdersController extends BaseStatisticsController
             ->toArray();
     }
 
+    /**
+     * Статистика заказов по дням/неделям/месяцам
+     * @param string $dateFormat
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @return \Illuminate\Support\Collection<int, Order>
+     */
+    private function ordersByPeriod($dateFormat, $startDate, $endDate)
+    {
+        return Order::whereBetween('created_at', [$startDate, $endDate])
+            ->select(
+                DB::raw("TO_CHAR(created_at, '{$dateFormat}') as period_date"),
+                DB::raw('COUNT(*) as total_orders'),
+                DB::raw('SUM(CASE WHEN status = \'completed\' THEN 1 ELSE 0 END) as completed_orders'),
+                DB::raw('SUM(CASE WHEN status = \'cancelled\' THEN 1 ELSE 0 END) as cancelled_orders'),
+                DB::raw('SUM(CASE WHEN status IN (\'preparing\', \'confirmed\') THEN 1 ELSE 0 END) as in_progress_orders')
+            )
+            ->groupBy('period_date')
+            ->orderBy('period_date')
+            ->get();
+    }
 }
+
